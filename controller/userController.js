@@ -7,7 +7,7 @@ export const createUser = async (req, res) => {
   try {
     const { name, email, dp, password } = req.body;
 
-    const myCloud = await cloudinary.uploader.upload(req.body.dp, {
+    const myCloud = await cloudinary.uploader.upload(dp, {
       folder: "userDP",
       width: 250,
       crop: "scale",

@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
 
 export const sendCookic = (user, res, message, statusCode = 200) => {
-
+  
     const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "30d",
     });
@@ -17,6 +17,7 @@ export const sendCookic = (user, res, message, statusCode = 200) => {
         success: true,
         message,
         token: token,
+        user
       });
   };
   
