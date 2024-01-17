@@ -69,6 +69,7 @@ export const allUser = async (req, res) => {
     res.status(200).json({
       message: "all users",
       user,
+      loginuser:req.user
     });
   } catch (error) {
     res.status(400).json({
