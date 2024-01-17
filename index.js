@@ -50,29 +50,31 @@ const io =new Server(server , {
 server.listen(process.env.PORT , ()=>{
     console.log("io server runing 5000 port")
 });
+
+
 let activeUser=[]
-let message = {}
+let message = []
 io.on("connection", (socket) => {
-    console.log('user connect')
+    console.log('user connect' , socket.id)
     socket.on('user-join' , (joinUser)=>{
         if(!activeUser.some((user)=>user.userId === joinUser._id )){
             activeUser.push({
                 userId:joinUser._id,
-                socketId:socket.id
+                socketId:socket.id,
+                user:joinUser
             })
         }
-        console.log( "user conected",joinUser);
+        console.log( "user conected",activeUser);
+        socket.emit('wellcome-user' ,joinUser)
+        io.emit('user_connect_msg',activeUser )
     })
-    socket.broadcast.emit('user_connect_msg',activeUser )
-    socket.emit('wellcome-user' ,activeUser)
 
-    socket.on('msg-send' ,(msg , reciver)=>{
-        message ={
-            message:msg ,
-            reciver:reciver
-        }
-        console.log(msg , reciver)
-        socket.emit('msg_show' , msg)
+    socket.on('msg-send' ,(msg)=>{
+        message.push({
+            msg 
+        })
+        console.log(msg.reciverId)
+        io.to([msg.reciverId]).emit('msg_show' , message)
     })
      // x8WIv7-mJelg7on_ALbx
     

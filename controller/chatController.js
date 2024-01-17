@@ -1,4 +1,5 @@
 import { Chats } from "../models/chatModel.js";
+import twilio from 'twilio'
 
 export const postMessage = async(req,res)=>{
     try {
@@ -52,3 +53,42 @@ export const allMessage = async (req , res) =>{
         })
     }
 }
+
+
+export const deleteAllMsg = async (req , res)=>{
+    try {
+        await Chats.deleteMany({})
+        res.json({
+            message:"delete all message..."
+        })
+    } catch (error) {
+        res.json({
+            error
+        })
+    }
+}
+
+export const twilioMsgSend = async (req , res)=>{
+    const {body , to} = req.body
+    const client = twilio(process.env.TWILIO_SID , process.env.TWILIO_TOKEN);
+    try {
+        const message = await client.messages.create({
+            body: body,
+            to:  to,
+            from: process.env.TWILIO_NUMBER,
+          });
+          res.status(200).json({
+            message:"msg send",
+            message
+          })
+          
+        } catch (error) {
+            
+            res.status(400).json({
+              message:"msg not send",
+              error
+            })
+    }
+
+}
+
