@@ -65,16 +65,22 @@ io.on("connection", (socket) => {
             })
         }
         console.log( "user conected",activeUser);
-        socket.emit('wellcome-user' ,joinUser)
+        // socket.broadcast("online_user" , activeUser)
+        socket.emit('wellcome-user' ,socket.id)
         io.emit('user_connect_msg',activeUser )
+
+        socket.on('disconnect' ,()=> {
+            console.log("user disconected" , socket.id);
+           activeUser = activeUser.filter((ele)=>{
+                 ele.socketId !== socket.id
+            })
+        })
     })
 
-    socket.on('msg-send' ,(msg)=>{
-        message.push({
-            msg 
-        })
+    socket.on("msg-send" ,(msg)=>{
+        console.log("message recive",msg);
         console.log(msg.reciverId)
-        io.to([msg.reciverId]).emit('msg_show' , message)
+        io.to([msg.activeSocket ,msg.reciverId]).emit('msg_show' , msg)
     })
      // x8WIv7-mJelg7on_ALbx
     
